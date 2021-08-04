@@ -3,37 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ImportExcelDataAPI.Models
 {
     public class ImportItem
     {
         [Key]
-        [Display(Name = "ID do Item")]
         public int ImportItemID { get; set; }
 
-        [Required(ErrorMessage = "{0} é uma informação obrigatória")]
-        [Display(Name = "Data de Entrega")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required]
+        [Column(TypeName ="date")]
         public DateTime DeliveryDate { get; set; }
 
-        [Required(ErrorMessage = "{0} é uma informação obrigatória")]
-        [Display(Name = "Nome do Produto")]
-        [StringLength(50, MinimumLength = 1, ErrorMessage = "{0} deve ter no máximo {1} caracteres")]
+        [Required]
+        [Column(TypeName ="nvarchar(50)")]
         public string ProductName { get; set; }
-
-        [Required(ErrorMessage = "{0} é uma informação obrigatória")]
-        [Display(Name = "Quantidade")]
+        [Required]
         public int Amount { get; set; }
-
-        [Required(ErrorMessage = "{0} é uma informação obrigatória")]
-        [Display(Name = "Valor Unitário")]
-        [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Required]
+        [Column(TypeName = "money")]
         public double UnitaryValue { get; set; }
-
         public Import Import { get; set; }
-
         [Required]
         public int ImportID { get; set; }
 

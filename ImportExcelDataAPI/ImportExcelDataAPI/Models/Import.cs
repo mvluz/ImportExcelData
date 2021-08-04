@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ImportExcelDataAPI.Models
 {
     public class Import
     {
         [Key]
-        [Display(Name = "ID do Item")]
         public int ImportID { get; set; }
 
-        [Display(Name = "Data e Hora da Importação")]
+        [Required]
+        [Column(TypeName = "datetime")]
         public DateTime CreatedON { get; set; }
 
-        [Display(Name = "Local do Arquivo")]
+        [Required]
         public string FileLocal { get; set; }
         public ICollection<ImportItem> ItemsList { get; set; } = new List<ImportItem>();
 
@@ -35,7 +36,7 @@ namespace ImportExcelDataAPI.Models
             ItemsList.Add(Item);
         }
 
-        public double TotalItemListAmount()
+        public int TotalItemListAmount()
         {
             return ItemsList.Sum(Item => Item.Amount);
         }
