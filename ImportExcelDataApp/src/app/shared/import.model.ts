@@ -2,8 +2,8 @@ import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/t
 import * as internal from "assert";
 import { Importitem } from "./importitem.model";
 export class Import {
-    importID: number;
-    createdON: string;
-    fileLocal: string;
+    importID: number = 0;
+    createdON: string = '';
+    fileLocal: string = ''; 
     itemsList: Importitem[];
 }

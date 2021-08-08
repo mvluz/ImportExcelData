@@ -1,3 +1,65 @@
-<p>
-  dataview works!
-</p>
+<div class="jumbtron py-3">
+    <h1 class="display-4 text-center"> Importar Arquivo Excel</h1>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">Envio da Importação
+        <app-formview></app-formview>    
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">Importações
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID da Importação</th>
+                    <th>Data/Hora da Importação</th>
+                    <th>Menos Data de Entrega</th>
+                    <th>Quantidade Total de Items</th>
+                    <th>Valor Total de Items</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let import of serviceImport.dataView">
+                    <td>{{ import.importID }}</td>
+                    <td>{{ import.createdON }}</td>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <td>
+                        <i class="fa fa-arrow-circle-down" aria-hidden="true"
+                        (click)="onDataViewItems(import.importID)"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">Items da Importação
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Data de Entrega</th>
+                    <th>Nome do Produto</th>
+                    <th>Quantidade</th>
+                    <th>Valor Unitário</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let importItem of serviceImport.dataViewItem">
+                    <td>{{ importItem.deliveryDate }}</td>
+                    <td>{{ importItem.productName }}</td>
+                    <td>{{ importItem.amount }}</td>
+                    <td>{{ importItem.unitaryValue }}</td>
+                    <td>{{ importItem.amount * importItem.unitaryValue }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,8 +1,8 @@
 export class Importitem {
-    importItemID: number;
-    deliveryDate: string;
-    productName: string;
-    amount: number;
-    unitaryValue: number;
-    importID: number;
+    importItemID: number = 0;
+    deliveryDate: string = '';
+    productName: string = '';
+    amount: number = 0;
+    unitaryValue: number = 0;
+    importID: number = 0;
 }
