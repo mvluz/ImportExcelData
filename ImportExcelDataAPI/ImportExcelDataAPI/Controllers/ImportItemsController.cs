@@ -28,17 +28,31 @@ namespace ImportExcelDataAPI.Controllers
         }
 
         // GET: api/ImportItems/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<ImportItem>> GetImportItem(int id)
+        //{
+        //    var importItem = await _context.ImportItems.FindAsync(id);
+
+        //    if (importItem == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return importItem;
+        //}
+
+        // GET: api/ImportItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ImportItem>> GetImportItem(int id)
+        public async Task<ActionResult<IEnumerable<ImportItem>>> GetImportItemByImportID(int id)
         {
-            var importItem = await _context.ImportItems.FindAsync(id);
+            //ImportItem[] importItem = 
 
-            if (importItem == null)
-            {
-                return NotFound();
-            }
+            //if (importItem == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return importItem;
+            return await _context.ImportItems.Where(i => i.ImportID == id).ToListAsync(); 
         }
 
         // PUT: api/ImportItems/5

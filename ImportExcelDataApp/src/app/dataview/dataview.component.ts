@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ImportService } from '../services/import.service';
-import { Importitem } from '../shared/importitem.model';
-
 
 @Component({
   selector: 'app-dataview',
@@ -22,9 +20,12 @@ export class DataViewComponent implements OnInit {
     this.serviceImport.getListDataViewItem(id)
     .subscribe(
       res=>{
-      this.serviceImport.dataViewItem=[];       
-      this.serviceImport.dataViewItem.push(res)}
-      );
+        this.serviceImport.dataViewItem=[];
+        for (const i in res) {
+          this.serviceImport.dataViewItem.push(res[i]);
+        }    
+      }
+    );
     
   }
 }
