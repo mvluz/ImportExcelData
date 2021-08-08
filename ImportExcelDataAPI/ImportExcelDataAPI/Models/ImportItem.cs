@@ -24,9 +24,10 @@ namespace ImportExcelDataAPI.Models
         [Required]
         [Column(TypeName = "money")]
         public double UnitaryValue { get; set; }
-        public Import Import { get; set; }
         [Required]
         public int ImportID { get; set; }
+        public Import Import { get; set; }
+
 
         public ImportItem()
         {
