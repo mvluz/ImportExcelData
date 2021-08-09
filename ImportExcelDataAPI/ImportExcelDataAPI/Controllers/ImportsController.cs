@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ImportExcelDataAPI.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using OfficeOpenXml;
 
 namespace ImportExcelDataAPI.Controllers
 {
@@ -15,8 +18,13 @@ namespace ImportExcelDataAPI.Controllers
     {
         private readonly APIContext _context;
 
-        public ImportsController(APIContext context)
+        [Obsolete]
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        [Obsolete]
+        public ImportsController(APIContext context,IHostingEnvironment hostingEnvironment)
         {
+            _hostingEnvironment = hostingEnvironment;
             _context = context;
         }
 
@@ -74,6 +82,7 @@ namespace ImportExcelDataAPI.Controllers
 
         // POST: api/Imports
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<Import>> PostImport(Import import)
         {
@@ -82,6 +91,8 @@ namespace ImportExcelDataAPI.Controllers
 
             return CreatedAtAction("GetImport", new { id = import.ImportID }, import);
         }
+
+
 
         // DELETE: api/Imports/5
         [HttpDelete("{id}")]

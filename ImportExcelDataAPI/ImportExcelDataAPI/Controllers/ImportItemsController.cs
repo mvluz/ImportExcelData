@@ -45,14 +45,14 @@ namespace ImportExcelDataAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<ImportItem>>> GetImportItemByImportID(int id)
         {
-            //ImportItem[] importItem = 
+            var itemList = await _context.ImportItems.Where(i => i.ImportID == id).ToListAsync();
+            
+            if (itemList == null)
+            {
+                return NotFound();
+            }
 
-            //if (importItem == null)
-            //{
-            //    return NotFound();
-            //}
-
-            return await _context.ImportItems.Where(i => i.ImportID == id).ToListAsync(); 
+            return itemList;
         }
 
         // PUT: api/ImportItems/5
@@ -91,6 +91,7 @@ namespace ImportExcelDataAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ImportItem>> PostImportItem(ImportItem importItem)
         {
+
             _context.ImportItems.Add(importItem);
             await _context.SaveChangesAsync();
 
