@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -31,14 +32,21 @@ namespace ImportExcelDataAPI.Controllers
         // POST api/<FileUploadsController>
         [HttpPost]
 
-        public async Task<ActionResult<FileUpload>> PostFileUpload(FileUpload fileUplodedVM)
+        public async Task<ActionResult> PostFileUpload()
         {
+            
             Import import = new Import();
+
+            var formCollection = await Request.ReadFormAsync();
+            var postedFile = formCollection.Files.First();
+            FileUpload fileUplodedVM = new FileUpload(postedFile);
+            // var postedFile = Request.Form.Files[0];
+            //fileUplodedVM.ExcelFile = postedFile;
 
             if (fileUplodedVM.ExcelFile != null)
             {
                 /* save file on server */
-                string rootFolder = _hostingEnvironment.WebRootPath;
+                string rootFolder = _hostingEnvironment.ContentRootPath;
                 string fileName = Guid.NewGuid().ToString() + fileUplodedVM.ExcelFile.FileName;
                 FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
 
@@ -215,6 +223,12 @@ namespace ImportExcelDataAPI.Controllers
                                     UnitaryValue = double.Parse(worksheet.Cells[row, 4].Value.ToString().Trim()),
                                 });
 
+
+                                _context.Imports.Add(import);
+                                await _context.SaveChangesAsync();
+
+                                return Ok(fileUplodedVM.FileUploadError);//CreatedAtAction("GetImport", new { id = import.ImportID }, import);
+
                             }
                         }
 
@@ -231,10 +245,7 @@ namespace ImportExcelDataAPI.Controllers
                 }
             }
 
-            _context.Imports.Add(import);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetImport", new { id = import.ImportID }, import);
+            return NotFound(fileUplodedVM.FileUploadError);
         }
 
     }

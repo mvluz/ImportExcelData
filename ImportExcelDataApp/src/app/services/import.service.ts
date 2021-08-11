@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Import } from '../shared/import.model';
 import { Importitem } from '../shared/importitem.model';
 import { HttpClient } from '@angular/common/http';
-import { baseURLImport, baseURLItem } from '../shared/baseurl';
+import { baseURLImport, baseURLItem, baseURLFile } from '../shared/baseurl';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 
@@ -14,17 +14,9 @@ export class ImportService {
   constructor(private http:HttpClient,
     private toastr:ToastrService) { }
   
-
-  formView: Import = new Import();
   dataView: Import[]; 
   dataViewItem: Importitem[] = [];
-
-  postFormView(){
-
-      return this.http.post(baseURLImport,this.formView);
-
-  }
-
+  
   resfreshDataView(){
     this.http.get(baseURLImport)
     .toPromise()

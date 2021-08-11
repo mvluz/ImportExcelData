@@ -1,12 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-
+import { HttpClient, HttpEventType } from '@angular/common/http';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { forEach } from '@angular/router/src/utils/collection';
 import { ToastrService } from 'ngx-toastr';
 import { ImportService } from 'src/app/services/import.service';
-import { baseURL, baseURLImport } from 'src/app/shared/baseurl';
-import { Import } from 'src/app/shared/import.model';
+import { baseURLFile } from 'src/app/shared/baseurl';
 
 @Component({
   selector: 'app-formview',
@@ -15,28 +13,43 @@ import { Import } from 'src/app/shared/import.model';
 })
 export class FormViewComponent implements OnInit {
 
-    constructor(public service:ImportService,
-    private toastr: ToastrService,
-    private http: HttpClient) { }
+  public progress: number;
+  public message: string;
+  @Output() public onUploadFinished = new EventEmitter();
 
+  constructor(public service:ImportService,
+  private toastr: ToastrService,
+  private http: HttpClient) { }
 
-    ngOnInit() {
+  fileToUpload: File | null = null;
+
+  ngOnInit() {
+  }
+
+  public uploadFile = (files) => {
+    if (files.length === 0) {
+      return;
     }
-
-    onSubmit(){
-
-      this.service.postFormView().subscribe(
-        res =>{
-          console.log(res);
-          //this.resetForm(form);
-          this.toastr.success("Importado com sucesso","Importação de Excel")
-        },
-        err =>{ console.log(err);}
-      );
-    }
-
-    resetForm(form:NgForm){
-      form.form.reset();
-      //this.service.formView = new Import();
-    }
+    let fileToUpload = <File>files[0];
+    const formData = new FormData();
+    formData.append('file', fileToUpload, fileToUpload.name);
+    this.http.post(baseURLFile, formData, {reportProgress: true, observe: 'events'})
+      .subscribe(event => {
+          
+        
+        if (event.type === HttpEventType.UploadProgress)
+          this.progress = Math.round(100 * event.loaded / event.total);
+        else if (event.type === HttpEventType.Response) {
+          this.message = 'Importação realizada com sucesso!';
+          this.onUploadFinished.emit(event.body);
+          console.log(event.body);     
+        }
+      });
+  }
+  
+  
+  resetForm(form:NgForm){
+    form.form.reset();
+    //this.service.formView = new Import();
+  }
 } 

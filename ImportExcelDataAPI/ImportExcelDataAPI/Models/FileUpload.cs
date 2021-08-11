@@ -29,8 +29,8 @@ namespace ImportExcelDataAPI.Models
 
         public FileUpload(IFormFile excelFile, FileUploadSave fileUploadSave, FileUploadError fileUploadError) : this(excelFile)
         {
-            FileUploadSave = fileUploadSave;
-            FileUploadError = fileUploadError;
+            FileUploadSave = new FileUploadSave(); ;
+            FileUploadError = new FileUploadError();
         }
     }
 }
