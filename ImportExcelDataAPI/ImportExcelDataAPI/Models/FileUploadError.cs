@@ -16,11 +16,9 @@ namespace ImportExcelDataAPI.Models
         public string Field { get; set; }
         [NotMapped]
         public string InfoError { get; set; }
-        [NotMapped]
-        public List<FileUploadError> ErrorList { get; set; }
+
         public FileUploadError()
         {
-            ErrorList = new List<FileUploadError>();
         }
     }
 }

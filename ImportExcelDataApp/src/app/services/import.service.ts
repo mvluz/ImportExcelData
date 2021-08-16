@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { baseURLImport, baseURLItem, baseURLFile } from '../shared/baseurl';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { FileUploadError } from '../shared/fileuploaderror';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class ImportService {
     private toastr:ToastrService) { }
   
   dataView: Import[]; 
-  dataViewItem: Importitem[] = [];
+  dataViewItem: Importitem[];
+  fileUploadError: FileUploadError[];
   
   resfreshDataView(){
     this.http.get(baseURLImport)
@@ -27,4 +29,7 @@ export class ImportService {
     return this.http.get<Importitem>(`${baseURLItem}/${id}`);
   }
 
+  uploudPost(formData):Observable<FileUploadError>{
+    return this.http.post<FileUploadError>(baseURLFile, formData);
+  }
 }

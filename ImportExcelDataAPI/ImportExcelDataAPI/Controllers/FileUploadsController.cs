@@ -15,6 +15,7 @@ namespace ImportExcelDataAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class FileUploadsController : ControllerBase
     {
         private readonly APIContext _context;
@@ -39,9 +40,8 @@ namespace ImportExcelDataAPI.Controllers
 
             var formCollection = await Request.ReadFormAsync();
             var postedFile = formCollection.Files.First();
-            FileUpload fileUplodedVM = new FileUpload(postedFile);
-            // var postedFile = Request.Form.Files[0];
-            //fileUplodedVM.ExcelFile = postedFile;
+            FileUpload fileUplodedVM = new FileUpload();
+            fileUplodedVM.ExcelFile = postedFile;
 
             if (fileUplodedVM.ExcelFile != null)
             {
@@ -84,7 +84,7 @@ namespace ImportExcelDataAPI.Controllers
                                                 if (DeliverDate <= DateTime.Today)
                                                 {
                                                     LineError = true;
-                                                    fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                    fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                     {
                                                         Line = row,
                                                         Field = "Data de Entrega",
@@ -97,7 +97,7 @@ namespace ImportExcelDataAPI.Controllers
                                             else
                                             {
                                                 LineError = true;
-                                                fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                 {
                                                     Line = row,
                                                     Field = "Data de Entrega",
@@ -111,7 +111,7 @@ namespace ImportExcelDataAPI.Controllers
                                             if (ProductName.Length > 50)
                                             {
                                                 LineError = true;
-                                                fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                 {
                                                     Line = row,
                                                     Field = "Nome do Produto",
@@ -127,7 +127,7 @@ namespace ImportExcelDataAPI.Controllers
                                                 if (Amount <= 0)
                                                 {
                                                     LineError = true;
-                                                    fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                    fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                     {
                                                         Line = row,
                                                         Field = "Quantidade",
@@ -139,7 +139,7 @@ namespace ImportExcelDataAPI.Controllers
                                             else
                                             {
                                                 LineError = true;
-                                                fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                 {
                                                     Line = row,
                                                     Field = "Quantidade",
@@ -155,7 +155,7 @@ namespace ImportExcelDataAPI.Controllers
                                                 if (UnitaryValue <= 0)
                                                 {
                                                     LineError = true;
-                                                    fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                    fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                     {
                                                         Line = row,
                                                         Field = "Valor Unitário",
@@ -167,7 +167,7 @@ namespace ImportExcelDataAPI.Controllers
                                             else
                                             {
                                                 LineError = true;
-                                                fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                                fileUplodedVM.FileUploadError.Add(new FileUploadError
                                                 {
                                                     Line = row,
                                                     Field = "Valor Unitário",
@@ -192,7 +192,7 @@ namespace ImportExcelDataAPI.Controllers
                                             break;
                                     }
                                     LineError = true;
-                                    fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                                    fileUplodedVM.FileUploadError.Add(new FileUploadError
                                     {
                                         Line = row,
                                         Field = field,
@@ -223,11 +223,7 @@ namespace ImportExcelDataAPI.Controllers
                                     UnitaryValue = double.Parse(worksheet.Cells[row, 4].Value.ToString().Trim()),
                                 });
 
-
-                                _context.Imports.Add(import);
-                                await _context.SaveChangesAsync();
-
-                                return Ok(fileUplodedVM.FileUploadError);//CreatedAtAction("GetImport", new { id = import.ImportID }, import);
+                                //return Ok(fileUplodedVM.FileUploadError);//CreatedAtAction("GetImport", new { id = import.ImportID }, import);
 
                             }
                         }
@@ -235,17 +231,21 @@ namespace ImportExcelDataAPI.Controllers
                     }
                     else
                     {
-                        fileUplodedVM.FileUploadError.ErrorList.Add(new FileUploadError
+                        fileUplodedVM.FileUploadError.Add(new FileUploadError
                         {
                             Line = 0,
                             Field = "Todos",
                             InfoError = "Documento vazio",
                         });
+
+                        return Ok(fileUplodedVM.FileUploadError);
                     }
                 }
             }
 
-            return NotFound(fileUplodedVM.FileUploadError);
+            _context.Imports.Add(import);
+            await _context.SaveChangesAsync();
+            return Ok(fileUplodedVM.FileUploadError);
         }
 
     }

@@ -23,9 +23,10 @@ export class DataViewComponent implements OnInit {
         this.serviceImport.dataViewItem=[];
         for (const i in res) {
           this.serviceImport.dataViewItem.push(res[i]);
-        }    
+        }
+        
       }
     );
-    
+    console.log(this.serviceImport.dataViewItem);    
   }
 }

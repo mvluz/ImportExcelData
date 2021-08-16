@@ -14,23 +14,15 @@ namespace ImportExcelDataAPI.Models
         [NotMapped]
         public IFormFile ExcelFile { get; set; }
         [NotMapped]
-        public FileUploadSave FileUploadSave { get; set; }
+        public List<FileUploadSave> FileUploadSave{ get; set; }
         [NotMapped]
-        public FileUploadError FileUploadError { get; set; }
+        public List<FileUploadError> FileUploadError { get; set; }
+
         public FileUpload()
         {
-        }
-        public FileUpload(IFormFile excelFile)
-        {
-            ExcelFile = excelFile;
-            FileUploadSave = new FileUploadSave();
-            FileUploadError = new FileUploadError();
+            FileUploadSave = new List<FileUploadSave>();
+            FileUploadError = new List<FileUploadError>();
         }
 
-        public FileUpload(IFormFile excelFile, FileUploadSave fileUploadSave, FileUploadError fileUploadError) : this(excelFile)
-        {
-            FileUploadSave = new FileUploadSave(); ;
-            FileUploadError = new FileUploadError();
-        }
     }
 }

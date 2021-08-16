@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row py-3">
     <div class="col-md-12">
         <h2>Importações</h2>
         <table class="table table-striped">
@@ -27,7 +27,7 @@
             <tbody>
                 <tr *ngFor="let import of serviceImport.dataView">
                     <td>{{ import.importID }}</td>
-                    <td>{{ import.createdON }}</td>
+                    <td>{{ import.createdON | date:'dd/MM/yyyy hh:mm:ss a' }}</td>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -56,11 +56,11 @@
             </thead>
             <tbody>
                 <tr *ngFor="let importItem of serviceImport.dataViewItem">
-                    <td>{{ importItem.deliveryDate }}</td>
+                    <td>{{ importItem.deliveryDate | date:'dd/MM/yyyy' }}</td>
                     <td>{{ importItem.productName }}</td>
                     <td>{{ importItem.amount }}</td>
-                    <td>{{ importItem.unitaryValue }}</td>
-                    <td>{{ importItem.amount * importItem.unitaryValue }}</td>
+                    <td>{{ importItem.unitaryValue | currency:"BRL":"symbol" }}</td>
+                    <td>{{ importItem.amount * importItem.unitaryValue | currency:"BRL":"symbol"}}</td>
                 </tr>
             </tbody>
         </table>
