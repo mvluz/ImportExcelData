@@ -21,10 +21,10 @@ namespace ImportExcelDataAPI.Controllers
         private readonly APIContext _context;
 
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
 
-        public FileUploadsController(APIContext context, IHostingEnvironment hostingEnvironment)
+        public FileUploadsController(APIContext context, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
             _context = context;
@@ -52,7 +52,7 @@ namespace ImportExcelDataAPI.Controllers
 
                 using (var stream = new MemoryStream())
                 {
-                    fileUplodedVM.ExcelFile.CopyToAsync(stream);
+                    await fileUplodedVM.ExcelFile.CopyToAsync(stream);
                     using (var package = new ExcelPackage(stream))
                     {
                         package.SaveAs(file);
@@ -238,14 +238,22 @@ namespace ImportExcelDataAPI.Controllers
                             InfoError = "Documento vazio",
                         });
 
-                        return Ok(fileUplodedVM.FileUploadError);
+                        return BadRequest(fileUplodedVM.FileUploadError);
                     }
                 }
             }
 
             _context.Imports.Add(import);
             await _context.SaveChangesAsync();
-            return Ok(fileUplodedVM.FileUploadError);
+
+            if (fileUplodedVM.FileUploadError.Count > 0)
+            {
+                return BadRequest(fileUplodedVM.FileUploadError);
+            }
+            else
+            {
+                return Ok();
+            }
         }
 
     }

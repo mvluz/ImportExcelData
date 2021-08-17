@@ -6,7 +6,7 @@
 <div class="row py-3">
     <div class="col-md-12">
         <h2>Envio da Importação</h2>
-        <app-formview></app-formview>    
+        <app-formview></app-formview>
     </div>
 </div>
 
@@ -18,9 +18,6 @@
                 <tr>
                     <th>ID da Importação</th>
                     <th>Data/Hora da Importação</th>
-                    <th>Menos Data de Entrega</th>
-                    <th>Quantidade Total dos Items</th>
-                    <th>Valor Total dos Items</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -28,12 +25,8 @@
                 <tr *ngFor="let import of serviceImport.dataView">
                     <td>{{ import.importID }}</td>
                     <td>{{ import.createdON | date:'dd/MM/yyyy hh:mm:ss a' }}</td>
-                    <th></th>
-                    <th></th>
-                    <th></th>
                     <td>
-                        <i class="fa fa-arrow-circle-down"
-                        (click)="onDataViewItems(import.importID)"> Itens</i>
+                        <i class="fa fa-arrow-circle-down" (click)="onDataViewItems(import.importID)"> Itens</i>
                     </td>
                 </tr>
             </tbody>
@@ -41,7 +34,7 @@
     </div>
 </div>
 
-<div class="row py-3">
+<div class="row py-3 text-center">
     <div class="col-md-12">
         <h2>Items da Importação</h2>
         <table class="table">
@@ -63,6 +56,22 @@
                     <td>{{ importItem.amount * importItem.unitaryValue | currency:"BRL":"symbol"}}</td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>Menor Data de Entrega</th>
+                    <th></th>
+                    <th>Quantidade Total dos Items</th>
+                    <th></th>
+                    <th>Valor Total dos Items</th>
+                </tr>
+                <tr>
+                    <td>{{ serviceImport.menorDate | date:'dd/MM/yyyy'}}</td>
+                    <td></td>
+                    <td>{{ serviceImport.totalAmount }}</td>
+                    <td></td>
+                    <td>{{ serviceImport.totalItemsValues | currency:"BRL":"symbol"}}</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

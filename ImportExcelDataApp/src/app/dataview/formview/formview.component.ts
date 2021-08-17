@@ -1,8 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ImportService } from 'src/app/services/import.service';
-import { FileUploadError } from 'src/app/shared/fileuploaderror';
+
 
 @Component({
   selector: 'app-formview',
@@ -25,28 +24,40 @@ export class FormViewComponent implements OnInit {
   }
 
   public uploadFile = (files) => {
-    var objError = [];
-    var value = '';
-    var obj = {};
-    if (files.length === 0) {
-      return;
-    }
+
     let fileToUpload = <File>files[0];
     const formData = new FormData();
+    let textTittleError = "Houve Erro na Importação de Excel";
+
+    if (files.length === 0) {
+      this.toastr.error("Selecione um arquivo", textTittleError)
+      return;
+    }
+
     formData.append('file', fileToUpload, fileToUpload.name);
+
     this.serviceImport.uploudPost(formData)
       .subscribe(
-        event => {
+        () => {
           this.serviceImport.fileUploadError = [];
-          for (const i in event) {
-            this.serviceImport.fileUploadError.push(event[i]);
-          }
-      });
+          this.toastr.success("Importado todos os registros com sucesso!", "Sucesso na Importação de Excel");
+          this.serviceImport.resfreshDataView();
+        },
+        error => {
+          this.serviceImport.fileUploadError = [];
+          if (error.status === 400) {
+            for (const i in error.error) {
+              this.serviceImport.fileUploadError.push(error.error[i]);
+            }
+            this.toastr.error("Alguns registros não foram importados", textTittleError);
+            this.serviceImport.resfreshDataView();
+          } else {
+            this.serviceImport.fileUploadError = [];
+            this.toastr.error("Arquivo não suportado", textTittleError);
+            this.serviceImport.resfreshDataView();
+          }          
+        }
+      );
   }
 
-
-  resetForm(form: NgForm) {
-    form.form.reset();
-    //this.service.formView = new Import();
-  }
 }
